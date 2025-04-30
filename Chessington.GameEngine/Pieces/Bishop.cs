@@ -13,6 +13,8 @@ namespace Chessington.GameEngine.Pieces
             var availableMoves = new List<Square>();
             var currentSquare = board.FindPiece(this);
             var boardSize = GameSettings.BoardSize;
+            
+            // Set possible directions for the bishop to move.
             var directions = new[] {
                 (1, 1),
                 (-1, 1),
