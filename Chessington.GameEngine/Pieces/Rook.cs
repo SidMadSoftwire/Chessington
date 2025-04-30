@@ -12,11 +12,27 @@ namespace Chessington.GameEngine.Pieces
         {
             var availableMoves = new List<Square>();
             var currentSquare = board.FindPiece(this);
+            const int boardSize = GameSettings.BoardSize;
+            
+            // Set possible directions for the rook to move.
+            var directions = new[] {
+                (0, 1),
+                (0, -1),
+                (1, 0),
+                (-1, 0) 
+            };
 
-            for (var i = 0; i < 8; i++)
+            foreach (var (rowDir, colDir) in directions)
             {
-                if (i != currentSquare.Col) availableMoves.Add(Square.At(currentSquare.Row, i));
-                if (i != currentSquare.Row) availableMoves.Add(Square.At(i, currentSquare.Col));
+                for (var i = 1; i < boardSize; i++)
+                {
+                    var newRow = currentSquare.Row + i * rowDir;
+                    var newCol = currentSquare.Col + i * colDir;
+
+                    if (newRow < 0 || newRow >= boardSize || newCol < 0 || newCol >= boardSize) break;
+                    availableMoves.Add(Square.At(newRow, newCol));
+                    if (board.GetPiece(Square.At(newRow, newCol)) != null) break;
+                }
             }
 
             return availableMoves;
