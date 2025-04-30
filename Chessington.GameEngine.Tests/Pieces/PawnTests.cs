@@ -201,5 +201,37 @@ namespace Chessington.GameEngine.Tests.Pieces
             moves.Should().NotContain(Square.At(6, 2));
             moves.Should().NotContain(Square.At(6, 4));
         }
+        
+        [Test]
+        public void BlackPawn_CanTake_EnPassant()
+        {
+            var board = new Board(Player.White);
+            var pawn = new Pawn(Player.Black);
+            board.AddPiece(Square.At(4, 3), pawn);
+            
+            var doubleMoverPawn = new Pawn(Player.White);
+            board.AddPiece(Square.At(6, 4), doubleMoverPawn);
+            doubleMoverPawn.MoveTo(board, Square.At(4, 4));
+            
+            var moves = pawn.GetAvailableMoves(board).ToList();
+
+            moves.Should().Contain(Square.At(5, 4));
+        }
+        
+        [Test]
+        public void WhitePawn_CanTake_EnPassant()
+        {
+            var board = new Board(Player.Black);
+            var pawn = new Pawn(Player.White);
+            board.AddPiece(Square.At(3, 4), pawn);
+            
+            var doubleMoverPawn = new Pawn(Player.Black);
+            board.AddPiece(Square.At(1, 3), doubleMoverPawn);
+            doubleMoverPawn.MoveTo(board, Square.At(3, 3));
+            
+            var moves = pawn.GetAvailableMoves(board).ToList();
+
+            moves.Should().Contain(Square.At(2, 3));
+        }
     }
 }

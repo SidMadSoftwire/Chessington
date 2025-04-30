@@ -7,10 +7,12 @@ namespace Chessington.GameEngine.Pieces
     {
 
         private bool hasMoved;
+        public bool jumpedPrevTurn;
         public Pawn(Player player)
             : base(player)
         {
             hasMoved = false;
+            jumpedPrevTurn = false;
         }
         
         public override IEnumerable<Square> GetAvailableMoves(Board board)
@@ -31,10 +33,18 @@ namespace Chessington.GameEngine.Pieces
             foreach (var side in sides)
             {
                 var diagonalSquare = Square.At(currentSquare.Row + dir, currentSquare.Col + side);
-                if (diagonalSquare.Col >= 0 && diagonalSquare.Col < boardSize)
-                {
-                    var diagonalPiece = board.GetPiece(diagonalSquare);
-                    if (diagonalPiece != null && diagonalPiece.Player != this.Player)
+                if (diagonalSquare.Col < 0 || diagonalSquare.Col >= boardSize) continue;
+                
+                var diagonalPiece = board.GetPiece(diagonalSquare);
+                if (diagonalPiece != null && diagonalPiece.Player != this.Player)
+                    availableMoves.Add(diagonalSquare);
+                
+                if (diagonalPiece == null)
+                { 
+                    var diagonalBehind = Square.At(diagonalSquare.Row - dir, diagonalSquare.Col);
+                    var diagonalBehindPiece = board.GetPiece(diagonalBehind);
+                    
+                    if (diagonalBehindPiece != null && diagonalBehindPiece.GetType() == typeof(Pawn))
                         availableMoves.Add(diagonalSquare);
                 }
             }
@@ -56,6 +66,15 @@ namespace Chessington.GameEngine.Pieces
             var currentSquare = board.FindPiece(this);
             board.MovePiece(currentSquare, newSquare);
             this.hasMoved = true;
+            
+            if (newSquare.Row - currentSquare.Row == 2 || newSquare.Row - currentSquare.Row == -2)
+            {
+                this.jumpedPrevTurn = true;
+            }
+            else
+            {
+                this.jumpedPrevTurn = false;
+            }
         }
     }
 }
