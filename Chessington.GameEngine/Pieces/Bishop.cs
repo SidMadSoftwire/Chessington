@@ -30,8 +30,9 @@ namespace Chessington.GameEngine.Pieces
                     var newRow = currentSquare.Row + i * rowDir;
                     var newCol = currentSquare.Col + i * colDir;
                     
-                    if (newRow >= 0 && newRow < boardSize && newCol >= 0 && newCol < boardSize) 
-                        availableMoves.Add(Square.At(newRow, newCol));
+                    if (newRow < 0 || newRow >= boardSize || newCol < 0 || newCol >= boardSize) break;
+                    availableMoves.Add(Square.At(newRow, newCol));
+                    if (board.GetPiece(Square.At(newRow, newCol)) != null) break;
                 }
             }
 
