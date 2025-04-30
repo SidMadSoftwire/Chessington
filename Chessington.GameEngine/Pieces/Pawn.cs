@@ -5,9 +5,14 @@ namespace Chessington.GameEngine.Pieces
 {
     public class Pawn : Piece
     {
-        public Pawn(Player player) 
-            : base(player) { }
 
+        private bool hasMoved;
+        public Pawn(Player player)
+            : base(player)
+        {
+            hasMoved = false;
+        }
+        
         public override IEnumerable<Square> GetAvailableMoves(Board board)
         {   
             var availableMoves = new List<Square>();
@@ -29,14 +34,23 @@ namespace Chessington.GameEngine.Pieces
             if (diagonalRightSquare.Col < GameSettings.BoardSize && board.GetPiece(diagonalRightSquare) != null)
                 availableMoves.Add(diagonalRightSquare);
    
-            if ((dir == 1 && currentSquare.Row == 1) || (dir == -1 && currentSquare.Row == GameSettings.BoardSize - 2))
+            if (this.hasMoved == false)
             {
+                if (currentSquare.Row + 2 * dir >= GameSettings.BoardSize || currentSquare.Row + 2 * dir < 0) return availableMoves;
+                
                 var doubleFrontSquare = Square.At(currentSquare.Row + 2 * dir, currentSquare.Col);
                 if (board.GetPiece(doubleFrontSquare) == null)
                     availableMoves.Add(doubleFrontSquare);
             }
             
             return availableMoves;
+        }
+        
+        public void MoveTo(Board board, Square newSquare)
+        {
+            var currentSquare = board.FindPiece(this);
+            board.MovePiece(currentSquare, newSquare);
+            this.hasMoved = true;
         }
     }
 }
