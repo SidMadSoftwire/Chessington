@@ -12,7 +12,7 @@ namespace Chessington.GameEngine.Pieces
         {
             var availableMoves = new List<Square>();
             var currentSquare = board.FindPiece(this);
-            var boardSize = GameSettings.BoardSize;
+            const int boardSize = GameSettings.BoardSize;
             var directions = new[] {
                 (1, 1),
                 (-1, 1),
