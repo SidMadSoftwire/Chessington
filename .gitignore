@@ -1,4 +1,6 @@
 reated by https://www.gitignore.io
+# JetBrains Rider files
+.idea/
 
 ### VisualStudio ###
 ## Ignore Visual Studio temporary files, build results, and
