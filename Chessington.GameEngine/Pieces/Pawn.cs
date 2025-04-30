@@ -26,15 +26,19 @@ namespace Chessington.GameEngine.Pieces
             var frontSquare = Square.At(currentSquare.Row + dir, currentSquare.Col);
             if (board.GetPiece(frontSquare) == null)
                 availableMoves.Add(frontSquare);
-               
-            var diagonalLeftSquare = Square.At(currentSquare.Row + dir, currentSquare.Col - 1);
-            if (diagonalLeftSquare.Col >= 0 &&board.GetPiece(diagonalLeftSquare) != null)
-                availableMoves.Add(diagonalLeftSquare);
-               
-            var diagonalRightSquare = Square.At(currentSquare.Row + dir, currentSquare.Col + 1);
-            if (diagonalRightSquare.Col < boardSize && board.GetPiece(diagonalRightSquare) != null)
-                availableMoves.Add(diagonalRightSquare);
-   
+
+            var sides = new[] { 1, -1 };
+            foreach (var side in sides)
+            {
+                var diagonalSquare = Square.At(currentSquare.Row + dir, currentSquare.Col + side);
+                if (diagonalSquare.Col >= 0 && diagonalSquare.Col < boardSize)
+                {
+                    var diagonalPiece = board.GetPiece(diagonalSquare);
+                    if (diagonalPiece != null && diagonalPiece.Player != this.Player)
+                        availableMoves.Add(diagonalSquare);
+                }
+            }
+            
             if (this.hasMoved == false)
             {
                 if (currentSquare.Row + 2 * dir >= boardSize || currentSquare.Row + 2 * dir < 0) return availableMoves;
