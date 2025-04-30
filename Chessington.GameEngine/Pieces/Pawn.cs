@@ -17,10 +17,11 @@ namespace Chessington.GameEngine.Pieces
         {   
             var availableMoves = new List<Square>();
             var currentSquare = board.FindPiece(this);
+            const int boardSize = GameSettings.BoardSize;
 
             var dir = this.Player == Player.White ? -1 : 1;
 
-            if (currentSquare.Row + dir >= GameSettings.BoardSize || currentSquare.Row + dir < 0) return availableMoves;
+            if (currentSquare.Row + dir >= boardSize || currentSquare.Row + dir < 0) return availableMoves;
 
             var frontSquare = Square.At(currentSquare.Row + dir, currentSquare.Col);
             if (board.GetPiece(frontSquare) == null)
@@ -31,15 +32,15 @@ namespace Chessington.GameEngine.Pieces
                 availableMoves.Add(diagonalLeftSquare);
                
             var diagonalRightSquare = Square.At(currentSquare.Row + dir, currentSquare.Col + 1);
-            if (diagonalRightSquare.Col < GameSettings.BoardSize && board.GetPiece(diagonalRightSquare) != null)
+            if (diagonalRightSquare.Col < boardSize && board.GetPiece(diagonalRightSquare) != null)
                 availableMoves.Add(diagonalRightSquare);
    
             if (this.hasMoved == false)
             {
-                if (currentSquare.Row + 2 * dir >= GameSettings.BoardSize || currentSquare.Row + 2 * dir < 0) return availableMoves;
+                if (currentSquare.Row + 2 * dir >= boardSize || currentSquare.Row + 2 * dir < 0) return availableMoves;
                 
                 var doubleFrontSquare = Square.At(currentSquare.Row + 2 * dir, currentSquare.Col);
-                if (board.GetPiece(doubleFrontSquare) == null)
+                if (board.GetPiece(frontSquare) == null && board.GetPiece(doubleFrontSquare) == null)
                     availableMoves.Add(doubleFrontSquare);
             }
             
