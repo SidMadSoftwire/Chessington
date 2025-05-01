@@ -76,5 +76,53 @@ namespace Chessington.GameEngine.Tests.Pieces
             var moves = king.GetAvailableMoves(board);
             moves.Should().NotContain(Square.At(4, 5));
         }
+        
+        
+        [Test]
+        public void King_CanDo_Castling()
+        {
+            var board = new Board();
+            var king = new King(Player.White);
+            board.AddPiece(Square.At(7, 4), king);
+            
+            var rook = new Rook(Player.White);
+            board.AddPiece(Square.At(7, 0), rook);
+            
+            var moves = king.GetAvailableMoves(board);
+            moves.Should().Contain(Square.At(7, 2));;
+        }
+        
+        [Test]
+        public void King_CannotDo_Castling_WhenBlockingPieces()
+        {
+            var board = new Board();
+            var king = new King(Player.White);
+            board.AddPiece(Square.At(7, 4), king);
+            
+            var rook = new Rook(Player.White);
+            board.AddPiece(Square.At(7, 0), rook);
+            
+            var bishop = new Bishop(Player.Black);
+            board.AddPiece(Square.At(7, 1), bishop);
+            
+            var moves = king.GetAvailableMoves(board);
+            moves.Should().NotContain(Square.At(7, 2));;
+        }
+        
+
+        [Test]
+        public void King_AfterCastling_RookHasMoved()
+        {
+            var board = new Board(Player.Black);
+            var king = new King(Player.Black);
+            board.AddPiece(Square.At(0, 4), king);
+            
+            var rook = new Rook(Player.Black);
+            board.AddPiece(Square.At(0, 7), rook);
+
+            king.GetAvailableMoves(board);
+            king.MoveTo(board, Square.At(0,6));
+            board.GetPiece(Square.At(0, 5)).Should().Be(rook);
+        }
     }
 }

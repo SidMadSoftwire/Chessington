@@ -5,8 +5,13 @@ namespace Chessington.GameEngine.Pieces
 {
     public class Rook : Piece
     {
+        public bool hasMoved;
+
         public Rook(Player player)
-            : base(player) { }
+            : base(player)
+        {
+            hasMoved = false;       
+        }
 
         public override IEnumerable<Square> GetAvailableMoves(Board board)
         {
@@ -38,8 +43,15 @@ namespace Chessington.GameEngine.Pieces
                     if (board.GetPiece(Square.At(newRow, newCol)) != null) break;
                 }
             }
-
+            
             return availableMoves;
+        }
+        
+        public override void MoveTo(Board board, Square newSquare)
+        {
+            var currentSquare = board.FindPiece(this);
+            board.MovePiece(currentSquare, newSquare);
+            this.hasMoved = true;
         }
     }
 }

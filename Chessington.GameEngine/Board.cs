@@ -61,8 +61,7 @@ namespace Chessington.GameEngine
             board[to.Row, to.Col] = board[from.Row, from.Col];
             board[from.Row, from.Col] = null;
 
-            CurrentPlayer = movingPiece.Player == Player.White ? Player.Black : Player.White;
-            OnCurrentPlayerChanged(CurrentPlayer);
+            SetCurrentPlayer(movingPiece.Player == Player.White ? Player.Black : Player.White);
         }
         
         public delegate void PieceCapturedEventHandler(Piece piece);
@@ -83,6 +82,12 @@ namespace Chessington.GameEngine
         {
             var handler = CurrentPlayerChanged;
             if (handler != null) handler(player);
+        }
+        
+        public void SetCurrentPlayer(Player player)
+        {
+            CurrentPlayer = player;
+            OnCurrentPlayerChanged(CurrentPlayer);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Chessington.GameEngine.Pieces
@@ -44,7 +45,8 @@ namespace Chessington.GameEngine.Pieces
                     var diagonalBehind = Square.At(diagonalSquare.Row - dir, diagonalSquare.Col);
                     var diagonalBehindPiece = board.GetPiece(diagonalBehind);
                     
-                    if (diagonalBehindPiece != null && diagonalBehindPiece.GetType() == typeof(Pawn))
+                    if (diagonalBehindPiece != null && diagonalBehindPiece.GetType() == typeof(Pawn) 
+                                                    && diagonalBehindPiece.Player != this.Player && ((Pawn)diagonalBehindPiece).jumpedPrevTurn == true)
                         availableMoves.Add(diagonalSquare);
                 }
             }
@@ -61,13 +63,13 @@ namespace Chessington.GameEngine.Pieces
             return availableMoves;
         }
         
-        public void MoveTo(Board board, Square newSquare)
+        public override void MoveTo(Board board, Square newSquare)
         {
             var currentSquare = board.FindPiece(this);
             board.MovePiece(currentSquare, newSquare);
             this.hasMoved = true;
             
-            if (newSquare.Row - currentSquare.Row == 2 || newSquare.Row - currentSquare.Row == -2)
+            if (Math.Abs(newSquare.Row - currentSquare.Row) == 2)
             {
                 this.jumpedPrevTurn = true;
             }
