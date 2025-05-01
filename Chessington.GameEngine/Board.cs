@@ -89,5 +89,12 @@ namespace Chessington.GameEngine
             CurrentPlayer = player;
             OnCurrentPlayerChanged(CurrentPlayer);
         }
+        
+        public void CapturePawnEnPassant(Pawn pawn)
+        {
+            OnPieceCaptured(pawn);
+            var pawnSquare = FindPiece(pawn);
+            board[pawnSquare.Row, pawnSquare.Col] = null;
+        }
     }
 }

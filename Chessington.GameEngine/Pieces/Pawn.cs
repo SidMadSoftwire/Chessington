@@ -69,13 +69,19 @@ namespace Chessington.GameEngine.Pieces
             board.MovePiece(currentSquare, newSquare);
             this.hasMoved = true;
             
-            if (Math.Abs(newSquare.Row - currentSquare.Row) == 2)
+            this.jumpedPrevTurn = Math.Abs(newSquare.Row - currentSquare.Row) == 2;
+
+            if (newSquare.Col - currentSquare.Col != 0)
             {
-                this.jumpedPrevTurn = true;
-            }
-            else
-            {
-                this.jumpedPrevTurn = false;
+                var enPassantSquare = Square.At(currentSquare.Row, newSquare.Col);
+                var enPassantPiece = board.GetPiece(enPassantSquare);
+
+                if (enPassantPiece != null && enPassantPiece.GetType() == typeof(Pawn)
+                                           && enPassantPiece.Player != this.Player &&
+                                           ((Pawn)enPassantPiece).jumpedPrevTurn)
+                {
+                    board.CapturePawnEnPassant((Pawn)enPassantPiece);
+                }
             }
         }
     }

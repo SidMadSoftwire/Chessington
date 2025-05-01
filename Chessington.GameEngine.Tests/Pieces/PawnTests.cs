@@ -233,5 +233,20 @@ namespace Chessington.GameEngine.Tests.Pieces
 
             moves.Should().Contain(Square.At(2, 3));
         }
+        
+        [Test]
+        public void Pawn_IfEnPassant_OpposingPieceIsRemoved()
+        {
+            var board = new Board(Player.Black);
+            var pawn = new Pawn(Player.White);
+            board.AddPiece(Square.At(4, 5), pawn);
+            
+            var doubleMoverPawn = new Pawn(Player.Black);
+            board.AddPiece(Square.At(2, 6), doubleMoverPawn);
+            doubleMoverPawn.MoveTo(board, Square.At(4, 6));
+            
+            pawn.MoveTo(board, Square.At(3, 6));;
+            board.GetPiece(Square.At(4, 6)).Should().BeNull();
+        }
     }
 }
